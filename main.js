@@ -139,6 +139,7 @@ async function doGravity(url, username, password, headless = true) {
                     )[1]
 
                     // 答え入力！
+                    await page.$eval('textarea[class="GravityCopyTermView-input"]', (el) => (el.value = ""))
                     await page.type('textarea[class="GravityCopyTermView-input"]', answer)
                     await page.keyboard.down("Enter")
                 } catch {
@@ -159,7 +160,7 @@ async function doGravity(url, username, password, headless = true) {
         console.log("〜終了〜")
 
         // スクショを保存するぜ
-        await page.waitForTimeout(3000)
+        await page.waitForTimeout(5000)
         const date = new Date().toLocaleString("sv").replace(/\D/g, "")
         await page.screenshot({ path: `screenshots/${date}.png` })
 
