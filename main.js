@@ -77,9 +77,8 @@ async function doGravity(url, username, password, headless = true) {
 
     try {
         // まずはログイン(ログインしたくなければコメントアウトしてね)
-        await login(username, password, page)
-
-        await page.waitForNavigation({ waitUntil: "domcontentloaded" })
+        // await login(username, password, page)
+        // await page.waitForNavigation({ waitUntil: "domcontentloaded" })
 
         // グラビティのページに行く
         await page.goto(url)
@@ -109,16 +108,16 @@ async function doGravity(url, username, password, headless = true) {
 
         // 終了するまでずっと回す
         while (!isFinished) {
-            // 惑星が降りてくるまで待つ
-            await page.waitForSelector('span[class="TermText notranslate lang-en"]', { timeout: 10000 })
-
-            // 発見したら全て見つけて中身からテキストを生成
-            const questions = await page.$$eval('span[class="TermText notranslate lang-en"]', (options) => {
-                return options.map((option) => option.textContent)
-            })
-
             // もしここで失敗したら死んでるので終わる
             try {
+                // 惑星が降りてくるまで待つ
+                await page.waitForSelector('span[class="TermText notranslate lang-en"]', { timeout: 10000 })
+
+                // 発見したら全て見つけて中身からテキストを生成
+                const questions = await page.$$eval('span[class="TermText notranslate lang-en"]', (options) => {
+                    return options.map((option) => option.textContent)
+                })
+
                 // 惑星ごとに
                 for (const question of questions) {
                     // 答えを持ってきて
@@ -160,7 +159,7 @@ async function doGravity(url, username, password, headless = true) {
         console.log("〜終了〜")
 
         // スクショを保存するぜ
-        await page.waitForTimeout(5000)
+        await page.waitForTimeout(10000)
         const date = new Date().toLocaleString("sv").replace(/\D/g, "")
         await page.screenshot({ path: `screenshots/${date}.png` })
 
