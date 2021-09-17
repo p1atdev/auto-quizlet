@@ -25,9 +25,11 @@ npm install
 ```js:test.js
 const main = require("./main")
 
+const quizlet_word_list_id = "123456789"
+
 // テスト
 async function test() {
-    await main.doGravity("https://quizlet.com/xxxxx00/gravity", "UserName", "Password", false)
+    await main.doGravity(quizlet_word_list_id, "UserName", "Password", false)
 }
 
 test()
@@ -37,14 +39,14 @@ test()
 `false`は、ヘッドレスモード(実際にブラウザを表示するか否か)を指定しています。
 `false`なら表示します。`true`なら表示しません。
 
-他のパラメーターはそれぞれ自分の、「グラビティの URL」、「ユーザーネーム」、「パスワード」を入れてください。
+他のパラメーターはそれぞれ自分の、「単語帳の id(URL のとこに表示される数字 9 桁)」、「ユーザーネーム」、「パスワード」を入れてください。
 次に、以下を実行して完了です。
 
 ```zsh
 node test.js
 ```
 
-ブラウザが立ち上がり、グラビティが開始されます。
+ブラウザが立ち上がり、単語の情報が取得された後、グラビティが開始されます。
 
 もしログインしたくなければ、`main.js`の
 

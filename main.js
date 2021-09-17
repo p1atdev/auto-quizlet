@@ -1,36 +1,7 @@
 var process = require("process")
 // const dotenv = require("dotenv")
-const puppeteer = require("puppeteer")
-
-const wordList = {
-    "delicate, not obvious (s・6)": "subtle",
-    "not easily changed (s・6)": "stable",
-    "having no particular interest or sympathy; unconcerned (i・11)": "indifferent",
-    "ready to attack or start fights; acting in a hostile way (a・10)": "aggressive",
-    "(adj.) last, final; most important or extreme; eventual, (u・8)": "ultimate",
-    "Having great depth or seriousness (p・8)": "profound",
-    "holding to traditional attitudes and values and cautious about change or innovation, typically in relation to politics or religion. (c・12)":
-        "conservative",
-    "courageous (b・5)": "brave",
-    "very strong (i・7)": "intense",
-    "based on or in accordance with reason or logic (r・8)": "rational",
-    "that cannot catch or be affected by a particular disease or illness (I・6)": "immune",
-    "extremely important (c・7)": "crucial",
-    "relating to or in the form of words (v・6)": "verbal",
-    "hopeful and confident about the future (o・10)": "optimistic",
-    "able to bend without breaking; able to change or to take in new ideas (f・8)": "flexible",
-    "feeling or expressing gratitude; thankful (g・8)": "grateful",
-    "full of energy or spirit (l・6)": "lively",
-    "very great in amount (o・12)": "overwhelming",
-    "more than enough; plentiful (a・8)": "abundant",
-    "existing or occurring at the beginning (i・7)": "initial",
-    "connected with language or the scientific study of language (l・10)": "linguistic",
-    "nervous and uncomfortable with other people (s・3)": "shy",
-    "relating to the sun (s・5)": "solar",
-    "connected with or containing alcohol (a・9)": "alcoholic",
-    "involving using the hands or physical strength (m・6)": "manual",
-    "willfully causing pain or suffering to others, or feeling no concern about it. (c・5)": "cruel",
-}
+// const puppeteer = require("puppeteer")
+const puppeteer = require("puppeteer-extra")
 
 // ログインする
 async function login(username, password, page) {
@@ -50,8 +21,15 @@ async function login(username, password, page) {
 }
 
 // グラビティをする
-async function doGravity(url, username, password, headless = true) {
+async function doGravity(id, username, password, headless = true) {
     console.log("start doGravity")
+
+    const AdblockerPlugin = require("puppeteer-extra-plugin-adblocker")
+    puppeteer.use(
+        AdblockerPlugin({
+            blockTrackers: true,
+        })
+    )
 
     const browser = await puppeteer.launch({
         headless: headless,
@@ -66,22 +44,42 @@ async function doGravity(url, username, password, headless = true) {
         ],
     })
     const page = await browser.newPage()
-    // await page.setRequestInterception(true)
-    // page.on("request", (request) => {
-    //     if (["image", "stylesheet", "font"].indexOf(request.resourceType()) !== -1) {
-    //         request.abort()
-    //     } else {
-    //         request.continue()
-    //     }
-    // })
 
     try {
         // まずはログイン(ログインしたくなければコメントアウトしてね)
-        // await login(username, password, page)
-        // await page.waitForNavigation({ waitUntil: "domcontentloaded" })
+        await login(username, password, page)
+        await page.waitForNavigation({ waitUntil: "domcontentloaded" })
+
+        console.log("単語のページに移動")
+
+        // 単語を取得するぜ
+        var wordList = {}
+        const wordListURL = `https://quizlet.com/${id}`
+        await page.goto(wordListURL)
+        await page.evaluate((_) => {
+            window.scrollBy(0, window.innerHeight * 5)
+        })
+        await page.waitForTimeout(3000)
+
+        console.log("移動完了")
+
+        // 全ての単語と問題を取得
+        console.log("単語を取得中...")
+        const allWords = await page.$$eval('span[class="TermText notranslate lang-en"]', (options) => {
+            return options.map((option) => option.textContent)
+        })
+
+        console.log(allWords)
+
+        for (var i = 0; i < allWords.length / 2; i++) {
+            wordList[allWords[i * 2 + 1]] = allWords[i * 2]
+        }
+
+        console.log(wordList)
 
         // グラビティのページに行く
-        await page.goto(url)
+        const gravityURL = `https://quizlet.com/${id}/gravity`
+        await page.goto(gravityURL)
 
         // ページのズームを切り替えるテスト(無視して)
         // await page.setViewport({
@@ -181,6 +179,6 @@ async function doGravity(url, username, password, headless = true) {
 }
 
 // 外部用
-module.exports.doGravity = async (url, email, password, headless = true) => {
-    await doGravity(url, email, password, headless)
+module.exports.doGravity = async (id, email, password, headless = true) => {
+    await doGravity(id, email, password, headless)
 }
