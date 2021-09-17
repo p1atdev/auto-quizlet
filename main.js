@@ -59,6 +59,9 @@ async function doGravity(id, username, password, headless = true) {
         await page.evaluate((_) => {
             window.scrollBy(0, window.innerHeight * 5)
         })
+        await page.evaluate((_) => {
+            window.scrollBy(0, window.innerHeight * 5)
+        })
         await page.waitForTimeout(3000)
 
         console.log("移動完了")
@@ -91,6 +94,7 @@ async function doGravity(id, username, password, headless = true) {
         // await page.waitForTimeout(999999)
 
         // ゲームを開始
+        await page.waitForSelector('button[class="UIButton UIButton--hero"]')
         await page.click('button[class="UIButton UIButton--hero"]')
 
         // 種類選択
