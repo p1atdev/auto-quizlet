@@ -34,6 +34,9 @@ const wordList = {
 
 // ログインする
 async function login(username, password, page) {
+    // まずは移動
+    await page.goto("https://quizlet.com/")
+
     await page.click(
         'button[class="AssemblyButtonBase AssemblyTextButton AssemblyTextButton--inverted AssemblyButtonBase--small"]'
     )
@@ -41,6 +44,9 @@ async function login(username, password, page) {
     // 諸情報入力
     await page.type("#username", username)
     await page.type("#password", password)
+
+    // submitする
+    await page.click('button[type="submit"]')
 }
 
 // グラビティをする
@@ -70,10 +76,11 @@ async function doGravity(url, username, password, headless = true) {
     // })
 
     try {
-        await page.goto(url)
-
         // まずはログイン(ログインしたくなければコメントアウトしてね)
         await login(username, password, page)
+
+        // グラビティのページに行く
+        await page.goto(url)
 
         // ゲームを開始
         await page.click('button[class="UIButton UIButton--hero"]')
