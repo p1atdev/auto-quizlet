@@ -3,33 +3,9 @@ var process = require("process")
 const puppeteer = require("puppeteer")
 
 const wordList = {
-    "delicate, not obvious (s・6)": "subtle",
-    "not easily changed (s・6)": "stable",
-    "having no particular interest or sympathy; unconcerned (i・11)": "indifferent",
-    "ready to attack or start fights; acting in a hostile way (a・10)": "aggressive",
-    "(adj.) last, final; most important or extreme; eventual, (u・8)": "ultimate",
-    "Having great depth or seriousness (p・8)": "profound",
-    "holding to traditional attitudes and values and cautious about change or innovation, typically in relation to politics or religion. (c・12)":
-        "conservative",
-    "courageous (b・5)": "brave",
-    "very strong (i・7)": "intense",
-    "based on or in accordance with reason or logic (r・8)": "rational",
-    "that cannot catch or be affected by a particular disease or illness (I・6)": "immune",
-    "extremely important (c・7)": "crucial",
-    "relating to or in the form of words (v・6)": "verbal",
-    "hopeful and confident about the future (o・10)": "optimistic",
-    "able to bend without breaking; able to change or to take in new ideas (f・8)": "flexible",
-    "feeling or expressing gratitude; thankful (g・8)": "grateful",
-    "full of energy or spirit (l・6)": "lively",
-    "very great in amount (o・12)": "overwhelming",
-    "more than enough; plentiful (a・8)": "abundant",
-    "existing or occurring at the beginning (i・7)": "initial",
-    "connected with language or the scientific study of language (l・10)": "linguistic",
-    "nervous and uncomfortable with other people (s・3)": "shy",
-    "relating to the sun (s・5)": "solar",
-    "connected with or containing alcohol (a・9)": "alcoholic",
-    "involving using the hands or physical strength (m・6)": "manual",
-    "willfully causing pain or suffering to others, or feeling no concern about it. (c・5)": "cruel",
+    "問題 1": "答え1",
+    "Question 2": "Answer 2",
+    "左に問題を入れて、 ": "右に入力したい答えを入れます",
 }
 
 // ログインする
