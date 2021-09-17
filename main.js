@@ -55,8 +55,19 @@ async function doGravity(url, username, password, headless = true) {
         // まずはログイン(ログインしたくなければコメントアウトしてね)
         await login(username, password, page)
 
+        // await page.waitForNavigation({ waitUntil: "domcontentloaded" })
+
         // グラビティのページに行く
         await page.goto(url)
+
+        // ページのズームを切り替えるテスト(無視して)
+        // await page.setViewport({
+        //     width: 1280,
+        //     height: 960,
+        //     deviceScaleFactor: 4,
+        // })
+
+        // await page.waitForTimeout(999999)
 
         // ゲームを開始
         await page.click('button[class="UIButton UIButton--hero"]')
@@ -120,6 +131,8 @@ async function doGravity(url, username, password, headless = true) {
                 console.log("繰り返す")
             }
         }
+
+        console.log("〜終了〜")
 
         // とりま終わったらしばらく待つ
         await page.waitForTimeout(999999999)
