@@ -21,7 +21,7 @@ async function login(username, password, page) {
 }
 
 // グラビティをする
-async function doGravity(id, username, password, headless = true) {
+async function doGravity(id, username, password, headless = true, isOnlyStar) {
     console.log("start doGravity")
 
     const AdblockerPlugin = require("puppeteer-extra-plugin-adblocker")
@@ -56,9 +56,6 @@ async function doGravity(id, username, password, headless = true) {
         var wordList = {}
         const wordListURL = `https://quizlet.com/${id}`
         await page.goto(wordListURL)
-        await page.evaluate((_) => {
-            window.scrollBy(0, window.innerHeight * 5)
-        })
         await page.evaluate((_) => {
             window.scrollBy(0, window.innerHeight * 5)
         })
@@ -100,7 +97,18 @@ async function doGravity(id, username, password, headless = true) {
         // 種類選択
         await page.select("select.UIDropdown-select", "word")
 
-        // 難易度選択
+        // 星のみを選択
+        if (isOnlyStar) {
+            await page.click('input[value="starred"]')
+            await page.waitForSelector('button[class="UIButton UIButton--hero"]')
+            await page.click('button[class="UIButton UIButton--hero"]')
+        }
+
+        // 難しいを選択
+        await page.click('input[value="EXPERT"]')
+
+        // 開始ボタン押す
+        // await page.waitForTimeout(50000)
         await page.click('button[class="UIButton UIButton--fill UIButton--hero"]')
 
         // 赤い惑星に注意
@@ -183,6 +191,6 @@ async function doGravity(id, username, password, headless = true) {
 }
 
 // 外部用
-module.exports.doGravity = async (id, email, password, headless = true) => {
-    await doGravity(id, email, password, headless)
+module.exports.doGravity = async (id, email, password, headless = true, isOnlyStar) => {
+    await doGravity(id, email, password, headless, isOnlyStar)
 }
